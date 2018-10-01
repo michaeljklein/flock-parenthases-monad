@@ -13,7 +13,7 @@ newtype Parens a = Parens { getParens :: Either a [Parens a] } deriving (Eq, Ord
 
 - `Monad` instance
 
-```
+```haskell
 instance Monad Parens where
   return = pure
 
@@ -60,12 +60,16 @@ examples =
   , "(a :# 1 | b :# 2) -> (a | b)"
   , "a :# 1 -> b :# 2 -> a"
   , "((a :# 2) -> (b :# 3)) -> (a , b) -> ((a -> b) | b)"
-  , "(((z :# 0), ((a :# 1), (b :# 2))) | (a -> b, b -> a))" -- < a trick, ((z :# 0, constraints) | expr) === constraints => expr
-  -- (('z' :# 0) :& (('a' :# 1) :& ('b' :# 2))) :| (('a' :# 1) :-> ('b' :# 2) :& ('b' :# 2) :-> ('a' :# 1))
+  , "(((z :# 0), ((a :# 1), (b :# 2))) | (a -> b, b -> a))"
+  -- < a trick, ((z :# 0, constraints) | expr) === constraints => expr
+  -- (('z' :# 0) :& (('a' :# 1) :& ('b' :# 2)))
+  --   :| (('a' :# 1) :-> ('b' :# 2) :& ('b' :# 2) :-> ('a' :# 1))
   ]
 
 -- A verbose proof that there is no bijection between ('a' :# 1) and ('b' :# 2):
--- λ> calcExpr $ (('z' :# 0) :& (('a' :# 1) :& ('b' :# 2))) :| (('a' :# 1) :-> ('b' :# 2) :& ('b' :# 2) :-> ('a' :# 1))
+-- λ> calcExpr $
+--   (('z' :# 0) :& (('a' :# 1) :& ('b' :# 2)))
+--     :| (('a' :# 1) :-> ('b' :# 2) :& ('b' :# 2) :-> ('a' :# 1))
 -- 0
 
 parseExamples ::
